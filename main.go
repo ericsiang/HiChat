@@ -2,6 +2,7 @@ package main
 
 import (
 	"HiChat/initialize"
+	"HiChat/router"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,6 @@ func main() {
 	//初始化数据库
 	initialize.InitDB("127.0.0.1","root","123456","hiChat",3306)
 
-	r:= gin.Default()
-	r.GET("/ping", Pong) //测试接口
-	r.Run(":8083")
+	router := router.Router()
+	router.Run(":8083")
 }

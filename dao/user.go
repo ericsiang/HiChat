@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func GetUserList() ([]*models.UserBasic, err) {
+func GetUserList() ([]*models.UserBasic, error) {
 	var list []*models.UserBasic
 	if tx := global.DB.Find(&list); tx.RowsAffected == 0 {
 		return nil, errors.New("没有用户")
@@ -28,7 +28,7 @@ func FindUserByNameAndPwd(name string, password string) (*models.UserBasic, erro
 
 	//token加密
 	token := strconv.Itoa(int(time.Now().Unix()))
-	temp := common.Md5encoder([]byte(token))
+	temp := common.Md5encoder(token)
 	if tx := global.DB.Model(&user).Where("id=? ", user.ID).Update("identify", temp); tx.RowsAffected == 0 {
 		return nil, errors.New("寫入identify失敗")
 	}
@@ -39,7 +39,8 @@ func FindUserByNameAndPwd(name string, password string) (*models.UserBasic, erro
 
 func FindUserByName(name string) (*models.UserBasic, error) {
 	user := models.UserBasic{}
-	if tx := global.DB.Where("name=?", name).First(&user); tx.RowsAffected == 0 {
+	zap.S().Info("name:", name)
+	if tx := global.DB.Where("name = ?", name).First(&user); tx.RowsAffected == 0 {
 		return nil, errors.New("没有查詢到紀錄")
 	}
 
@@ -73,7 +74,7 @@ func FindUerByEmail(email string) (*models.UserBasic, error) {
 	return &user, nil
 }
 
-func FindUserID(ID uint) (*models.UserBasic, error) {
+func FindUserByID(ID uint) (*models.UserBasic, error) {
 	user := models.UserBasic{}
 	if tx := global.DB.Where(ID).First(&user); tx.RowsAffected == 0 {
 		return nil, errors.New("没有查詢到紀錄")

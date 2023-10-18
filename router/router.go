@@ -18,6 +18,9 @@ func Router() *gin.Engine {
 		user.POST("/register",service.NewUser)
 		user.POST("/users", middleware.JWY() ,service.UpdataUser)
 		user.DELETE("/delete", middleware.JWY() ,service.DeleteUser)
+
+		//消息相關
+		user.GET("/SendUserMsg", service.SendUserMsg)
 	}
 
 	relation := v1.Group("relation").Use(middleware.JWY())
@@ -27,6 +30,11 @@ func Router() *gin.Engine {
 		relation.POST("/newGroup", service.NewGroup)
         relation.POST("/groupList", service.GroupList)
         relation.POST("/joinGroup", service.JoinGroup)
+	}
+
+	upload := v1.Group("upload").Use(middleware.JWY())
+	{
+		upload.POST("/image",service.UploadImage)
 	}
 
 	return router

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"HiChat/dao"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -118,7 +117,7 @@ func dispatch(data []byte) {
 	case 1: //私聊
 		sendMsg(msg.TargetId, data)
 	case 2: //群聊
-		sendGroupMsg(unit(msg.FromId), unit(msg.TargetId), data)
+		sendGroupMsg(uint(msg.FromId), uint(msg.TargetId), data)
 	}
 }
 
@@ -138,7 +137,7 @@ func sendMsg(targetId int64, data []byte) {
 // sendGroupMsg 向群聊发送消息
 func sendGroupMsg(fromId uint, targetId uint, data []byte) (int, error) {
 	//群发的逻辑：1获取到群里所有用户，然后向除开自己的每一位用户发送消息
-	userIDs, err := dao.FindUsers(fromId)
+	userIDs, err := FindUsers(fromId)
 	if err != nil {
 		zap.S().Info("查詢用戶失敗", err)
 		return -1, err

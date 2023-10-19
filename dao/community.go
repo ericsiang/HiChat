@@ -76,3 +76,19 @@ func JoinCommunity(ownerId uint, cname string) (int, error) {
 
 	return 0, nil
 }
+
+// FindUsers 获取群成员id
+func FindUsers(groupId uint) ([]uint, error) {
+	relation := make([]models.Relation, 0)
+
+	if tx := global.DB.Where("target_id = ? and type = 2", groupId).Find(&relation); tx.RowsAffected == 0 {
+		return nil, errors.New("未在群中找到該成員")
+	}
+
+	userIDs := make([]uint, 0)
+	for _, v := range relation {
+		userId := v.OwnerId
+		userIDs = append(userIDs, userId)
+	}
+	return userIDs, nil
+}

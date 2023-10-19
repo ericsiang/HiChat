@@ -220,5 +220,5 @@ func DeleteUser(ctx *gin.Context) {
 
 //SendUserMsg 发送消息
 func SendUserMsg(ctx *gin.Context) {
-    models.Chat(ctx.Writer, ctx.Request)
+    Chat(ctx.Writer, ctx.Request)
 }

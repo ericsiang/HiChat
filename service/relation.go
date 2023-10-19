@@ -197,7 +197,6 @@ func GroupList(ctx *gin.Context) {
 func JoinGroup(ctx *gin.Context) {
 	comName := ctx.PostForm("comName")
 
-
 	user := ctx.PostForm("userId")
 	userId, err := strconv.Atoi(user)
 	if err != nil {
@@ -217,7 +216,7 @@ func JoinGroup(ctx *gin.Context) {
 		return
 	}
 
-	code, err := dao.JoinCommunity(uint(userId),comName)
+	code, err := dao.JoinCommunity(uint(userId), comName)
 	if err != nil {
 		HandleErr(code, ctx, err)
 		return
@@ -228,3 +227,4 @@ func JoinGroup(ctx *gin.Context) {
 		"msg":  "加入群聊成功",
 	})
 }
+

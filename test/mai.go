@@ -19,6 +19,7 @@ func main() {
 		&models.UserBasic{}, 
 		&models.Relation{},
 		&models.Community{},
+		&models.Message{},
 	)
 	if err != nil {
 		panic(err)

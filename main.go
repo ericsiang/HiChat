@@ -1,8 +1,10 @@
 package main
 
 import (
+	"HiChat/global"
 	"HiChat/initialize"
 	"HiChat/router"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,11 +17,15 @@ func Pong(c *gin.Context) {
 }
 
 func main() {
+	//初始化配置
+	initialize.InitConfig()
 	//初始化日志
 	initialize.InitLogger()
 	//初始化数据库
-	initialize.InitDB("127.0.0.1","root","123456","hiChat",3306)
+	initialize.InitDB()
+	initialize.InitRedis()
 
+	
 	router := router.Router()
-	router.Run(":8083")
+	router.Run(fmt.Sprintf(":%d", global.ServiceConfig.Port))
 }

@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
+	"strings"
+
 	"time"
 
 	"errors"
@@ -44,20 +44,8 @@ func GenerateToken(userId uint, iss string) (string, error) {
 
 func JWY() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.PostForm("token")
-		user := c.Query("user")
-		userId, err := strconv.Atoi(user)
-		zap.S().Infoln("userId:", userId)
-		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code": -1,
-				"msg":  "user id 不合法",
-			})
-			c.Abort()
-			return
-		}
-
-		if token == "" {
+		bearerToken := c.GetHeader("Authorization")
+		if bearerToken == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": -1,
 				"msg":  "token 不能為空",
@@ -65,6 +53,10 @@ func JWY() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		jwtToken := strings.Split(bearerToken, " ")
+		token := jwtToken[1]
+		zap.S().Info("JWY token:", token)
 
 		claims, err := ParseToken(token)
 		if err != nil {
@@ -74,25 +66,17 @@ func JWY() gin.HandlerFunc {
 			})
 			c.Abort()
 			return
-		}else if time.Now().Unix() > claims.ExpiresAt{
+		} else if time.Now().Unix() > claims.ExpiresAt {
 			err = TokenExpiredError
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"code": -1,
-				"msg": "token 已過期",
+				"msg":  "token 已過期",
 			})
 			c.Abort()
 			return
 		}
 		
-		if claims.UserID != uint(userId) {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code": -1,
-				"msg":  "登入不合法",
-			})
-			c.Abort()
-			return
-		}
-		fmt.Println("token 驗證成功")
+		zap.S().Info("token 驗證成功")
 		c.Next()
 	}
 }

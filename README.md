@@ -8,7 +8,9 @@
 * 加好友、好友列表、建群組、加入群組、群組列表
 
 ### 技术 Tool
-* Go、Gin、Websocket、UDP、Mysql、Redis、Viper、Gorm、Zap、Md5、Jwt
+* Go、Gin、Websocket、UDP、Mysql、Redis、Viper(config setting)、Gorm(ORM)、Zap(log controller)、lumberjack(cutting log file )、Md5、Jwt
+
+    * zap、lumberjack 參考 : [Go日志库zap使用详解 ](https://www.cnblogs.com/jiujuan/p/17304844.html) 、[高性能日志库zap配置示例](https://studygolang.com/articles/17394)、[Go 項目實現日誌](https://www.readfog.com/a/1709305422763102208)
 
 ### 系统架构
 ![](flowData/system.png)
